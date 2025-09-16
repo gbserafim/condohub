@@ -35,16 +35,26 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        // Verifique se já existe algum usuário no sistema.
+        // Se a contagem for zero, este é o primeiro usuário, que será o administrador.
+        $isAdmin = User::count() === 0;
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'is_admin' => $isAdmin,
         ]);
 
         event(new Registered($user));
 
-        Auth::login($user);
+        // Removido o login automático.
+        // Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        // Adicione uma mensagem de sucesso para ser exibida na tela de login.
+        session()->flash('success', 'Sua conta foi criada com sucesso! Por favor, faça login.');
+
+        // Redireciona para a tela de login.
+        return redirect()->route('login');
     }
 }

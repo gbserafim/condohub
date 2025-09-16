@@ -33,4 +33,10 @@
             </button>
         </div>
     </form>
-</x-guest-layout>   
+
+    <div class="mt-4 text-center">
+        <a href="{{ route('register') }}" class="underline text-sm text-[#0057ab] hover:text-[#004080]">
+            Não possui uma conta? Registre-se!
+        </a>
+    </div>
+</x-guest-layout>
