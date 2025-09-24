@@ -12,6 +12,16 @@ use Illuminate\Support\Facades\Auth;
 class CondominioController extends Controller
 {
     /**
+     * Exibe a lista de condomínios.
+     */
+    public function index(): View
+    {
+        $condominios = Condominio::all();
+
+        return view('condominio.index', compact('condominios'));
+    }
+
+    /**
      * Exibe o formulário de cadastro de condomínio.
      */
     public function create(): View

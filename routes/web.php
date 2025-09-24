@@ -3,27 +3,27 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CondominioController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::view('/dashboard', 'dashboard')->name('dashboard');
+    
+    // Rotas de perfil
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    // Rotas para Condomínios
+    Route::get('/condominios', [CondominioController::class, 'index'])->name('condominio.index');
+    Route::get('/condominio/create', [CondominioController::class, 'create'])->name('condominio.create');
+    Route::post('/condominio', [CondominioController::class, 'store'])->name('condominio.store');
+    
+    // Rotas para Usuários
+    Route::get('/usuarios', [UserController::class, 'index'])->name('usuarios.index');
 });
-
-Route::get('/condominio/create', [CondominioController::class, 'create'])
-    ->middleware(['auth', 'verified'])
-    ->name('condominio.create');
-
-Route::post('/condominio', [CondominioController::class, 'store'])
-    ->middleware(['auth', 'verified'])
-    ->name('condominio.store');
 
 require __DIR__.'/auth.php';
