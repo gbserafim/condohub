@@ -28,33 +28,24 @@ class RegisteredUserController extends Controller
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+{
+    $request->validate([
+        'name' => ['required', 'string', 'max:255'],
+        'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+        'password' => ['required', 'confirmed', Rules\Password::defaults()],
+    ]);
 
-        // Verifique se já existe algum usuário no sistema.
-        // Se a contagem for zero, este é o primeiro usuário, que será o administrador.
-        $isAdmin = User::count() === 0;
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+        'is_admin' => User::count() === 0, // A lógica de contagem de usuários é a última coisa a ser checada
+    ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'is_admin' => $isAdmin,
-        ]);
+    event(new Registered($user));
 
-        event(new Registered($user));
+    session()->flash('success', 'Sua conta foi criada com sucesso! Por favor, faça login.');
 
-        // Removido o login automático.
-        // Auth::login($user);
-
-        // Adicione uma mensagem de sucesso para ser exibida na tela de login.
-        session()->flash('success', 'Sua conta foi criada com sucesso! Por favor, faça login.');
-
-        // Redireciona para a tela de login.
-        return redirect()->route('login');
-    }
+    return redirect()->route('login');
+}
 }
