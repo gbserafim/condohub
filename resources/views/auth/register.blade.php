@@ -14,6 +14,12 @@
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
+        {{-- Campo oculto para o token de convite --}}
+        @if(request()->query('invite'))
+            <input type="hidden" name="invite_token" value="{{ request()->query('invite') }}">
+        @endif
+        {{-- Fim do Campo Oculto --}}
+
         <div class="space-y-4">
             <div>
                 <label for="name" class="block text-xs font-semibold text-[#0057ab] uppercase mb-1">Nome</label>
@@ -39,6 +45,20 @@
             <div>
                 <label for="password_confirmation" class="block text-xs font-semibold text-[#0057ab] uppercase mb-1">Confirmar Senha</label>
                 <input id="password_confirmation" type="password" name="password_confirmation" required
+                    class="block w-full rounded-lg border-gray-300 bg-gray-100 text-sm shadow-sm px-3 py-2
+                        focus:ring-[#0057ab] focus:border-[#0057ab]">
+            </div>
+            
+            <div>
+                <label for="bloco" class="block text-xs font-semibold text-[#0057ab] uppercase mb-1">Bloco / Torre</label>
+                <input id="bloco" type="text" name="bloco" value="{{ old('bloco') }}" required
+                    class="block w-full rounded-lg border-gray-300 bg-gray-100 text-sm shadow-sm px-3 py-2
+                        focus:ring-[#0057ab] focus:border-[#0057ab]">
+            </div>
+
+            <div>
+                <label for="unidade" class="block text-xs font-semibold text-[#0057ab] uppercase mb-1">Unidade / Apto</label>
+                <input id="unidade" type="text" name="unidade" value="{{ old('unidade') }}" required
                     class="block w-full rounded-lg border-gray-300 bg-gray-100 text-sm shadow-sm px-3 py-2
                         focus:ring-[#0057ab] focus:border-[#0057ab]">
             </div>

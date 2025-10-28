@@ -24,6 +24,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     // Rotas para Usuários
     Route::get('/usuarios', [UserController::class, 'index'])->name('usuarios.index');
+
+    // Rota para gerar o token de convite
+    Route::post('/condominio/invite/generate', [CondominioController::class, 'generateInviteToken'])
+        ->name('condominio.invite.generate');
 });
 
 require __DIR__.'/auth.php';
